@@ -24,12 +24,17 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         Role::create([
+            'name' => 'owner',
+            'guard_name' => 'web',
+        ]);
+
+        Role::create([
             'name' => 'majikan',
             'guard_name' => 'web',
         ]);
 
         Role::create([
-            'name' => 'hunter',
+            'name' => 'pembantu',
             'guard_name' => 'web',
         ]);
     }
