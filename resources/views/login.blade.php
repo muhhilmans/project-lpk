@@ -43,7 +43,7 @@
                                             <p class="text-danger">{{ session('error') }}</p>
                                         @endif
                                     </div>
-                                    <form class="user" method="POST" action="{{ route('auth') }}">
+                                    <form class="user" action="{{ route('authenticate') }}" method="POST">
                                         @csrf
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"

@@ -26,17 +26,18 @@ class AuthController extends Controller
         return view('login');
     }
 
-    public function auth(Request $request): RedirectResponse
+    public function authenticate(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'account' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $fieldType = filter_var($request->account, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $fieldType = filter_var($validated['account'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
         $credentials = [
-            $fieldType => $request->account,
-            'password' => $request->password,
+            $fieldType => $validated['account'],
+            'password' => $validated['password'],
         ];
 
         if (Auth::attempt($credentials)) {
@@ -44,9 +45,9 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if ($user->is_active == 1) {
-                if ($user->hasRole('pembantu')) {
+                if ($user->roles->first()->name == 'pembantu') {
                     return redirect()->intended('/dashboard-servant');
-                } elseif ($user->hasRole('majikan')) {
+                } elseif ($user->roles->first()->name == 'majikan') {
                     return redirect()->intended('/dashboard-employe');
                 } else {
                     return redirect()->intended('/dashboard');
@@ -58,5 +59,15 @@ class AuthController extends Controller
         }
 
         return back()->with('error', 'Akun yang dimasukkan salah!');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->to('/');
     }
 }

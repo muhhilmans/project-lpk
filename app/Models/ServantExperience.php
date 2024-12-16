@@ -10,7 +10,7 @@ class ServantExperience extends Model
     use HasUuids;
 
     public $incrementing = false;
-    public $keyType = 'string';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
