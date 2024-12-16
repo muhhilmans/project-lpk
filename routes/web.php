@@ -7,7 +7,7 @@ Route::get('/', [AuthController::class, 'login'])->name('login');
 
 Route::post('/auth', [AuthController::class, 'auth'])->name('auth');
 
-Route::middleware(['auth'])->group(function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard-servant', function () {
         return view('cms.dashboard.dashboard-servant');
     })->name('dashboard-servant');

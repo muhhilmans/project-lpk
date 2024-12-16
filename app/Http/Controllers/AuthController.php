@@ -41,15 +41,15 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            $user = User::where('id', Auth::id())->first();
+            $user = Auth::user();
 
             if ($user->is_active == 1) {
-                if ($user->roles->first()->name == 'pembantu') {
-                    return redirect()->route('dashboard-servant');
-                } elseif ($user->roles->first()->name == 'majikan') {
-                    return redirect()->route('dashboard-employe');
+                if ($user->hasRole('pembantu')) {
+                    return redirect()->intended('/dashboard-servant');
+                } elseif ($user->hasRole('majikan')) {
+                    return redirect()->intended('/dashboard-employe');
                 } else {
-                    return redirect()->route('dashboard');
+                    return redirect()->intended('/dashboard');
                 }
             } else {
                 Auth::logout();
