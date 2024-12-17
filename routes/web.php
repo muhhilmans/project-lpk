@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\User\AdminController;
 
 Route::middleware(['web'])->group(function () {
     Route::get('/', [AuthController::class, 'login'])->name('login');
@@ -9,7 +10,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/authenticate', [AuthController::class, 'authenticate'])->name('authenticate'); 
 });
 
-Route::middleware(['auth', 'web'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard-servant', function () {
         return view('cms.dashboard.dashboard-servant');
     })->name('dashboard-servant');
@@ -18,9 +19,7 @@ Route::middleware(['auth', 'web'])->group(function () {
         return view('cms.dashboard.dashboard-employe');
     })->name('dashboard-employe');
 
-    Route::get('/dashboard', function () {
-        return view('cms.dashboard.dashboard');
-    })->name('dashboard');
+    require __DIR__.'/role/admin.php';
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
